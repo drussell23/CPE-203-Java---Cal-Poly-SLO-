@@ -1,37 +1,26 @@
-import java.awt.Point;
 import java.awt.*;
 
-public class Circle implements Shape
+public class Circle
 {
+    private Point Center;
     private double radius;
-    private final Point center;
-    private Color color;
 
-    public Circle(double radius, Point center, Color color)
+    Circle(Point c1, double r)
     {
-        this.radius = radius;
-        this.center = center;
-        this.color = color;
+        Center = c1;
+        radius = r;
     }
-
-    // Default
     public double getRadius()
     {
         return radius;
     }
-    public void setRadius(double r)
-    {
-        this.radius = r;
-    }
+
     public Point getCenter()
     {
-        return center;
+        return Center;
     }
-
-    //interface
-    public Color getColor() { return color; }
-    public void setColor(Color color) { this.color = color; }
-    public double getArea() { return (Math.PI*Math.pow(radius, 2)); }
-    public void translate(Point point) { center.setLocation(center.getX() + point.getX(), center.getY() + point.getY()); }
-    public double getPerimeter() { return (2*Math.PI*radius); }
+    public double perimeter()
+    {
+        return (2.0 * Math.PI * this.getRadius());
+    }
 }

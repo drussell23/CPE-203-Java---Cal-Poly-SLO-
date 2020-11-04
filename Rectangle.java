@@ -1,58 +1,27 @@
-import java.awt.*;
-
-public class Rectangle implements Shape
+public class Rectangle
 {
-    private double width;
-    private double height;
-    private final Point TopLeft;
-    private Color color;
+    private Point topLeft, bottomRight;
 
-    public Rectangle(double width, double height, Point TopLeft, Color color)
+    Rectangle(Point point1, Point point2)
     {
-        this.width = width;
-        this.height = height;
-        this.TopLeft = TopLeft;
-        this.color = color;
+        topLeft = point1;
+        bottomRight = point2;
     }
 
-    public double getWidth()
-    {
-        return width;
-    }
-    public void setWidth(double w)
-    {
-        this.width = w;
-    }
-    public double getHeight()
-    {
-        return height;
-    }
-    public void setHeight(double h)
-    {
-        this.height = h;
-    }
     public Point getTopLeft()
     {
-        return TopLeft;
+        return topLeft;
     }
-    public Color getColor()
+
+    public Point getBottomRight()
     {
-        return color;
+        return bottomRight;
     }
-    public void setColor(Color color)
+
+    public double perimeter()
     {
-        this.color = color;
-    }
-    public double getArea()
-    {
-        return (width*height);
-    }
-    public void translate(Point point)
-    {
-        TopLeft.setLocation(TopLeft.getX() + point.getX(), TopLeft.getY() + point.getY());
-    }
-    public double getPerimeter()
-    {
-        return ( (2*width) + (2*height) );
+        double width = Math.abs((this.getBottomRight().getX() - this.getTopLeft().getX()));
+        double height = Math.abs((this.getBottomRight().getY() - this.getTopLeft().getY()));
+        return (2.0 * width + 2.0 * height);
     }
 }

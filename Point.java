@@ -1,37 +1,39 @@
 public class Point
 {
-    public final int x;
-    public final int y;
+    private double x;
+    private double y;
 
-    public String toString()
+    Point(double x_1, double y_1)
     {
-        return ("Point{" + "x=" + x + ", y=" + y + '}');
+        x = x_1;
+        y = y_1;
     }
 
-    public boolean equals(Object o)
+    public double getX()
     {
-        if(this == o)
-            return true;
-
-        if(o == null || getClass() != o.getClass())
-            return false;
-
-        Point point = (Point) o;
-
-        if(x != point.x)
-            return false;
-        return y == point.y;
+        return x;
     }
 
-    public int hashCode()
+    public double getY()
     {
-        int result = x;
-        result = 31 * result + y;
-        return result;
+        return y;
     }
-    public Point(int x, int y)
+
+    public double getRadius()
     {
-        this.x = x;
-        this.y = y;
+        return (Math.sqrt(y*y+x*x));
+    }
+
+    public double getAngle()
+    {
+        return (Math.atan2(y,x));
+    }
+
+    public Point rotate90()
+    {
+        double x_prime = this.getRadius()*Math.cos(this.getAngle()+Math.PI/2);
+        double y_prime = this.getRadius()*Math.sin(this.getAngle()+Math.PI/2);
+
+        return new Point(x_prime, y_prime);
     }
 }
