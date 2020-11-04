@@ -1,201 +1,101 @@
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Test;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class TestCases
 {
-    private static final double DELTA = 0.00001;
-
     @Test
-    public void testSimpleIf1()
+    public void testExercise1()
     {
-        assertEquals(1.7, SimpleIf.max(1.2, 1.7), DELTA);
+        final CourseSection one = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 40), LocalTime.of(11, 0));
+        final CourseSection two = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 40), LocalTime.of(11, 0));
+
+        assertEquals(one, two);
+        assertEquals(two, one);
     }
 
     @Test
-    public void testSimpleIf2()
+    public void testExercise2()
     {
-        assertEquals(10, SimpleIf.max(5, 10), DELTA);
+        final CourseSection one = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 10), LocalTime.of(10, 0));
+        final CourseSection two = new CourseSection("CSC", "203", 35,
+                LocalTime.of(1, 10), null);
+
+        assertNotEquals(one.hashCode(), two.hashCode());
     }
 
     @Test
-    public void testSimpleIf3()
+    public void testExercise3()
     {
-        /* TO DO: Write one more valid test case. */
-        assertEquals(18,SimpleLoop.sum(5, 7));
+        final CourseSection one = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 40), LocalTime.of(11, 0));
+        final CourseSection two = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 40), LocalTime.of(11, 0));
+
+        assertEquals(one.hashCode(), two.hashCode());
     }
 
     @Test
-    public void testSimpleLoop1()
+    public void testExercise4()
     {
-        assertEquals(7, SimpleLoop.sum(3, 4));
+        final CourseSection one = new CourseSection("CSC", "203", 35,
+                LocalTime.of(9, 10), LocalTime.of(10, 0));
+        final CourseSection two = new CourseSection("CSC", "203", 34,
+                LocalTime.of(9, 10), LocalTime.of(10, 0));
+
+        assertNotEquals(one.hashCode(), two.hashCode());
+    }
+
+    //==============================================================//
+//Student portion
+    private static final List<CourseSection> lst = Arrays.asList(
+            new CourseSection("CSC", "203", 35, LocalTime.of(9, 40),
+                    LocalTime.of(11, 0)),
+            new CourseSection("CSC", "203", 35, LocalTime.of(9, 40),
+                    LocalTime.of(11, 0))
+    );
+
+    @Test
+    public void testExercise5()
+    {
+        final Student one = new Student("Bob", "Jerry", 35, lst);
+        final Student two = new Student("Bob", "Jerry", 35, lst);
+
+        assertEquals(one, two);
+        assertEquals(two, one);
     }
 
     @Test
-    public void testSimpleLoop2()
+    public void testExercise6()
     {
-        assertEquals(7, SimpleLoop.sum(-2, 4));
+        final Student one = new Student("Bob", "Jerry", 35, lst);
+        final Student two = new Student("Bob", "Jerry", 10, lst);
+
+        assertNotEquals(one, two);
+        assertNotEquals(two, one);
     }
 
     @Test
-    public void testSimpleLoop3()
+    public void testExercise7()
     {
+        final Student one = new Student("Bob", "Jerry", 35, lst);
+        final Student two = new Student("Bob", "Jerry", 35, lst);
 
-      /* TO DO: Write one more valid test case to make sure that
-         this function is not just returning 7. */
-        assertEquals(26, SimpleLoop.sum(5, 8));
+        assertEquals(one.hashCode(), two.hashCode());
     }
 
     @Test
-    public void testSimpleArray1()
+    public void testExercise8()
     {
-      /* What are those parameters?  They are newly allocated arrays
-         with initial values. */
-        assertArrayEquals(
-                new int[] {1, 4, 9},
-                SimpleArray.squareAll(new int[] {1, 2, 3}));
-    }
+        final Student one = new Student("Bob", "Jerry", 35, lst);
+        final Student two = new Student("Bob", "Jerry", 10001, lst);
 
-    @Test
-    public void testSimpleArray2()
-    {
-        assertArrayEquals(
-                new int[] {49, 25},
-                SimpleArray.squareAll(new int[] {7, 5}));
-    }
-
-    @Test
-    public void testSimpleArray3()
-    {
-        /* TO DO: Add a new test case. */
-        assertArrayEquals(
-                new int[] {36, 64},
-                SimpleArray.squareAll(new int[] {6, 8}));
-    }
-
-    @Test
-    public void testSimpleList1()
-    {
-        List<Integer> input =
-                new LinkedList<Integer>(Arrays.asList(new Integer[] {1, 2, 3}));
-        List<Integer> expected =
-                new ArrayList<Integer>(Arrays.asList(new Integer[] {1, 4, 9}));
-
-        assertEquals(expected, SimpleList.squareAll(input));
-    }
-
-    @Test
-    public void testSimpleList2()
-    {
-        List<Integer> input =
-                new LinkedList<Integer>(Arrays.asList(new Integer[] {4, 8, 9}));
-        List<Integer> expected =
-                new ArrayList<Integer>(Arrays.asList(new Integer[] {16, 64, 81}));
-
-        assertEquals(expected, SimpleList.squareAll(input));
-    }
-
-    @Test
-    public void testBetterLoop1()
-    {
-        assertTrue(BetterLoop.contains(new int[] {7, 5}, 5));
-    }
-
-    @Test
-    public void testBetterLoop2()
-    {
-        assertTrue(BetterLoop.contains(new int[] {7, 5, 2, 4}, 4));
-    }
-
-    @Test
-    public void testBetterLoop3()
-    {
-        /* TO DO: Write a valid test case where the expected result is false. */
-        assertTrue(BetterLoop.contains(new int[] {34, 56, 12, 78}, 12));
-    }
-
-    @Test
-    public void testExampleMap1()
-    {
-        List<String> expected = Arrays.asList("Julie", "Zoe");
-        Map<String, List<Course>> courseListsByStudent = new HashMap<>();
-
-        courseListsByStudent.put("Julie",
-                Arrays.asList(
-                        new Course("CPE 123", 4),
-                        new Course("CPE 101", 4),
-                        new Course("CPE 202", 4),
-                        new Course("CPE 203", 4),
-                        new Course("CPE 225", 4)));
-        courseListsByStudent.put("Paul",
-                Arrays.asList(
-                        new Course("CPE 101", 4),
-                        new Course("CPE 202", 4),
-                        new Course("CPE 203", 4),
-                        new Course("CPE 225", 4)));
-        courseListsByStudent.put("Zoe",
-                Arrays.asList(
-                        new Course("CPE 123", 4),
-                        new Course("CPE 203", 4),
-                        new Course("CPE 471", 4),
-                        new Course("CPE 473", 4),
-                        new Course("CPE 476", 4),
-                        new Course("CPE 572", 4)));
-
-        /*
-         * Why compare HashSets here?  Just so that the order of the
-         * elements in the list is not important for this test.
-         */
-        assertEquals(new HashSet<>(expected),
-                new HashSet<>(ExampleMap.highEnrollmentStudents(
-                        courseListsByStudent, 16)));
-    }
-
-    @Test
-    public void testExampleMap2()
-    {
-        /* TO DO: Write another valid test case. */
-        List<String> expected = Arrays.asList("Derek");
-        Map<String, List<Course>> courseListsByStudent = new HashMap<>();
-
-        courseListsByStudent.put("James",
-                Arrays.asList(
-                        new Course("CPE 123", 5),
-                        new Course("CPE 101", 5),
-                        new Course("CPE 202", 5),
-                        new Course("CPE 203", 5),
-                        new Course("CPE 225", 5)));
-        courseListsByStudent.put("Chris",
-                Arrays.asList(
-                        new Course("CPE 101", 5),
-                        new Course("CPE 202", 5),
-                        new Course("CPE 203", 5),
-                        new Course("CPE 225", 5)));
-        courseListsByStudent.put("Derek",
-                Arrays.asList(
-                        new Course("CPE 123", 20),
-                        new Course("CPE 203", 20),
-                        new Course("CPE 471", 20),
-                        new Course("CPE 473", 20),
-                        new Course("CPE 476", 20),
-                        new Course("CPE 572", 20)));
-
-        /*
-         * Why compare HashSets here?  Just so that the order of the
-         * elements in the list is not important for this test.
-         */
-        assertEquals(new HashSet<>(expected),
-                new HashSet<>(ExampleMap.highEnrollmentStudents(
-                        courseListsByStudent, 55)));
+        assertNotEquals(one.hashCode(), two.hashCode());
     }
 }
