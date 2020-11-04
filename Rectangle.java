@@ -1,27 +1,21 @@
-public class Rectangle
+import java.lang.*;
+
+class Rectangle
 {
-    private Point topLeft, bottomRight;
+    final private Point TopLeft;
+    final private Point BottomRight;
 
-    Rectangle(Point point1, Point point2)
+    public Rectangle(Point TopLeft, Point BottomRight)
     {
-        topLeft = point1;
-        bottomRight = point2;
+        this.TopLeft = TopLeft;
+        this.BottomRight = BottomRight;
     }
-
     public Point getTopLeft()
     {
-        return topLeft;
+        return (TopLeft);
     }
-
     public Point getBottomRight()
     {
-        return bottomRight;
-    }
-
-    public double perimeter()
-    {
-        double width = Math.abs((this.getBottomRight().getX() - this.getTopLeft().getX()));
-        double height = Math.abs((this.getBottomRight().getY() - this.getTopLeft().getY()));
-        return (2.0 * width + 2.0 * height);
+        return (BottomRight);
     }
 }

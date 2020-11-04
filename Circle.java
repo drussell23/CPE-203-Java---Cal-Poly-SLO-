@@ -1,26 +1,19 @@
-import java.awt.*;
-
 public class Circle
 {
     private Point Center;
     private double radius;
 
-    Circle(Point c1, double r)
+    Circle(Point circle_1, double radius_1)
     {
-        Center = c1;
-        radius = r;
+        Center = circle_1;
+        radius = radius_1;
     }
     public double getRadius()
     {
         return radius;
     }
-
     public Point getCenter()
     {
         return Center;
-    }
-    public double perimeter()
-    {
-        return (2.0 * Math.PI * this.getRadius());
     }
 }

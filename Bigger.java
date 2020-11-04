@@ -1,23 +1,30 @@
+import java.util.Arrays;
 import java.util.*;
 
-class Bigger
+public class Bigger
 {
-    public static double whichIsBigger(Circle circleVal, Rectangle rectVal, Polygon polyVal) {
-        double c = circleVal.perimeter();
-        double r = rectVal.perimeter();
-        double p = polyVal.perimeter();
+    public static double whichIsBigger(Circle circle_1, Rectangle Rectangle_1, Polygon polygon_1)
+    {
+        List<Point> points_polygon = Arrays.asList(new Point(0.0, 0.0),
+                                                   new Point(3.0, 2.0),
+                                                   new Point(1.0, 4.0),
+                                                   new Point(-1.0, 4.0));
 
-        ArrayList<Double> perimeterVals = new ArrayList<Double>();
-        perimeterVals.add(c);
-        perimeterVals.add(r);
-        perimeterVals.add(p);
+        double p_Circle = Util.perimeter(circle_1);
+        double p_Rectangle = Util.perimeter(Rectangle_1);
+        double p_Polygon = Util.perimeter(polygon_1);
 
-        double max = perimeterVals.get(0);
-        for(int i=0; i < perimeterVals.size();i++) {
-            if(perimeterVals.get(i) > max) {
-                max = perimeterVals.get(i);
-            }
+        if(p_Circle > p_Rectangle && p_Circle > p_Polygon)
+        {
+            return -1.0;
         }
-        return max;
+        if(p_Rectangle > p_Circle && p_Rectangle > p_Polygon)
+        {
+            return 1.0;
+        }
+        else
+            {
+            return 0.0;
+        }
     }
 }
