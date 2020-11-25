@@ -1,36 +1,45 @@
-import java.lang.*;
-
-class Point
+final class Point
 {
-    final private double x;
-    final private double y;
+    public final int x;
+    public final int y;
 
-    public  Point(double x1, double y1)
+    public Point(int x, int y)
     {
-       x = x1;
-       y = y1;
+        this.x = x;
+        this.y = y;
     }
-    public double getX()
-    {
-        return x;
-    }
-    public double getY()
-    {
-        return y;
-    }
-    public double getRadius()
-    {
-        return (Math.sqrt(y * y + x * x));
-    }
-    public double getAngle()
-    {
-       return (Math.atan2(y, x));
-    }
-    public Point rotate90()
-    {
-        double x_prime = this.getRadius() * Math.cos(this.getAngle() + Math.PI/2);
-        double y_prime = this.getRadius() * Math.sin(this.getAngle() + Math.PI/2);
+    public int getX() { return (x); }
+    public int getY() { return (y);}
 
-        return new Point(x_prime, y_prime);
+    public String toString()
+    {
+        return "(" + x + "," + y + ")";
+    }
+
+    public boolean equals(Object other)
+    {
+        return (other instanceof Point) &&
+                (((Point) other).x == this.x) &&
+                (((Point) other).y == this.y);
+    }
+
+    public int hashCode()
+    {
+        int result;
+        result = 17 * 31 + x;
+        result = result * 31 + y;
+        return result;
+    }
+
+    public static boolean adjacent(Point p1, Point p2) {
+        return (Math.abs(p1.y - p2.y) == 1 && p1.x == p2.x) ||
+                (p1.y == p2.y && Math.abs(p1.x - p2.x) == 1);
+    }
+
+    public static int distanceSquared(Point point_1, Point point_2)
+    {
+        int delta_X = point_1.x - point_2.x, delta_Y = point_1.y - point_2.y;
+
+        return (delta_X * delta_X + delta_Y * delta_Y);
     }
 }

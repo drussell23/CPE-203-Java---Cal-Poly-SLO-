@@ -1,9 +1,14 @@
+// Name: Derek J. Russell
+// Date: 11/11/2020
+
+// Project 3 - (CPE 203)
 import processing.core.PImage;
-
 import java.util.List;
+import java.util.Random;
 
-public class Ore implements Executable {
+public class Ore extends Abstract_Executable {
 
+    private static final Random random = new Random();
 
     public static final String BLOB_KEY = "blob";
     public static final String BLOB_ID_SUFFIX = " -- blob";
@@ -11,104 +16,25 @@ public class Ore implements Executable {
     public static final int BLOB_ANIMATION_MIN = 50;
     public static final int BLOB_ANIMATION_MAX = 150;
 
-
-
-
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    public int resourceLimit;
-    public int resourceCount;
-    private final int actionPeriod;
-    private final int animationPeriod;
-    private final String id;
-
-
-    public Ore(String id, Point position,
-               List<PImage> images, int resourceLimit, int resourceCount,
-               int actionPeriod, int animationPeriod) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+    public Ore(String id, Point position, List<PImage> images, int actionPeriod) {
+        super(id, position, images, actionPeriod);
     }
-
-    public static Ore createOre(String id, Point position, int actionPeriod,
-                                List<PImage> images) {
-        return new Ore(id, position, images, 0, 0,
-                actionPeriod, 0);
-    }
-
-
-    public Point getPosition() {
-        return this.position;
-    }
-
-    public List<PImage> getImages() {
-        return this.images;
-    }
-
-    public int getImageIndex() {
-        return this.imageIndex;
-    }
-    //public int getResourceLimit() { return this.resourceLimit;}
-    //public int getResourceCount() { return this.resourceCount;}
-    // public int getActionPeriod() { return this.actionPeriod;}
-    //public int getAnimationPeriod() { return this.animationPeriod;}
-
-
-    //setters
-    //public void setEntityKind(EntityKind k) {  this.kind =k;}
-    //public void setID(String i ) {  this.id = i;}
-    public void setPosition(Point p) {
-        this.position = p;
-    }
-
-    public void setImages(List<PImage> i) {
-        this.images = i;
-    }
-    //public void setImageIndex(int i) { this.imageIndex = i;}
-    //public void setResourceLimit(int r) { this.resourceLimit = r;}
-    //public void setResourceCount(int r) { this.resourceCount=r;}
-    //public void setActionPeriod(int a) { this.actionPeriod = a;}
-    //public void setAnimationPeriod(int a) {this.animationPeriod = a;}
-
 
     public void execute(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-        Point pos = this.position;  // store current position before removing
+        Point pos = this.getPosition();
 
-        world.removeEntity(this);
+        world.removeEntityAt(this.getPosition());
         scheduler.unscheduleAllEvents(this);
 
-        Oreblob blob = Oreblob.createOreBlob(this.id + BLOB_ID_SUFFIX,
-                pos, this.actionPeriod / BLOB_PERIOD_SCALE,
-                BLOB_ANIMATION_MIN +
-                        Functions.rand.nextInt(BLOB_ANIMATION_MAX - BLOB_ANIMATION_MIN),
-                Functions.getImageList(imageStore, BLOB_KEY));
+        Abstract_Moveable blob = new Oreblob(this.id + BLOB_ID_SUFFIX, pos, ImageStore.getImageList(imageStore, BLOB_KEY),
+                getActionPeriod() / BLOB_PERIOD_SCALE,
+                BLOB_ANIMATION_MIN + random.nextInt(BLOB_ANIMATION_MAX - BLOB_ANIMATION_MIN));
 
         world.addEntity(blob);
         blob.scheduleActions(scheduler, world, imageStore);
+
     }
-
-    public int getAnimationPeriod() {
-        return this.animationPeriod;
-    }
-
-
-    public void nextImage() {
-        this.imageIndex = (this.getImageIndex() + 1) % this.getImages().size();
-    }
-
-
     public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
-
-        scheduler.scheduleEvent(this,
-                Activity.createActivityAction(this, world, imageStore),
-                this.actionPeriod);
+        scheduler.scheduleEvent(this, new Activity(this, world, imageStore, 0), this.getActionPeriod());
     }
-
 }

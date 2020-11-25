@@ -20,7 +20,9 @@ final class WorldView
         this.viewport = new Viewport(numRows, numCols);
     }
 
-    public WorldModel getWorld(){return world;}
+    public WorldModel getWorld(){ return world; }
+
+    public Viewport getViewport() { return viewport; }
 
     public static int clamp(int value, int low, int high)
     {
@@ -56,7 +58,7 @@ final class WorldView
 
     public void drawEntities()
     {
-        for (Entity entity : this.getWorld().getEntities())
+        for (Abstract_Entity entity : this.getWorld().getEntities())
         {
             Point pos = entity.getPosition();
             if (this.viewport.contains(pos))

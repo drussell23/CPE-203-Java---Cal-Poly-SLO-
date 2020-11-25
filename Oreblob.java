@@ -1,88 +1,36 @@
 import processing.core.PImage;
-
 import java.util.List;
 import java.util.Optional;
 
-public class Oreblob implements Moveable{
-
-
-
-
+public class Oreblob extends Abstract_Moveable
+{
     public static final String QUAKE_KEY = "quake";
-   // public static final String QUAKE_ID = "quake";
 
 
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    public final int resourceLimit;
-    public int resourceCount;
-    private final int actionPeriod;
-    private final int animationPeriod;
-    public final String id;
-
-
-    public Oreblob(String id, Point position,
-                   List<PImage> images, int resourceLimit, int resourceCount,
-                   int actionPeriod, int animationPeriod) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
-    }
-
-    public static Oreblob createOreBlob(String id, Point position,
-                                        int actionPeriod, int animationPeriod, List<PImage> images)
+    public Oreblob(String id, Point position, List<PImage>  images, int actionPeriod, int animationPeriod)
     {
-        return new Oreblob( id, position, images,
-                0, 0, actionPeriod, animationPeriod);
+       super(id, position, images, actionPeriod, animationPeriod);
     }
 
+    public static Oreblob createOreBlob(String id, Point position, int actionPeriod, int animationPeriod, List<PImage> images){
+        return new Oreblob(id, position, images, actionPeriod, animationPeriod);
+    }
 
-
-    public Point getPosition() { return this.position;}
-    public List<PImage> getImages() { return this.images;}
-    public int getImageIndex() { return this.imageIndex;}
-    //public int getResourceLimit() { return this.resourceLimit;}
-    //public int getResourceCount() { return this.resourceCount;}
-    // public int getActionPeriod() { return this.actionPeriod;}
-    //public int getAnimationPeriod() { return this.animationPeriod;}
-
-
-
-    //setters
-    //public void setEntityKind(EntityKind k) {  this.kind =k;}
-    //public void setID(String i ) {  this.id = i;}
-    public void setPosition(Point p) { this.position = p;}
-    public void setImages(List<PImage> i) { this.images =i; }
-    //public void setImageIndex(int i) { this.imageIndex = i;}
-    //public void setResourceLimit(int r) { this.resourceLimit = r;}
-    //public void setResourceCount(int r) { this.resourceCount=r;}
-    //public void setActionPeriod(int a) { this.actionPeriod = a;}
-    //public void setAnimationPeriod(int a) {this.animationPeriod = a;}
-
-
-
-
-    public boolean moveToOreBlob( WorldModel world, Entity target, EventScheduler scheduler)
+    public boolean moveToOreBlob(WorldModel world, Abstract_Entity target, EventScheduler scheduler)
     {
         if (Point.adjacent(this.getPosition(), target.getPosition()))
         {
-            world.removeEntity(target);
-            scheduler.unscheduleAllEvents( target);
+            world.removeEntityAt( target.getPosition());
+            scheduler.unscheduleAllEvents(target);
             return true;
         }
         else
         {
             Point nextPos = this.nextPosition( world, target.getPosition());
 
-            if (!this.position.equals(nextPos))
+            if(!this.getPosition().equals(nextPos))
             {
-                Optional<Entity> occupant = world.getOccupant( nextPos);
+                Optional<Abstract_Entity> occupant = world.getOccupant(nextPos);
                 occupant.ifPresent(scheduler::unscheduleAllEvents);
 
                 world.moveEntity(this, nextPos);
@@ -91,42 +39,10 @@ public class Oreblob implements Moveable{
         }
     }
 
-
-
-    public Point nextPosition( WorldModel world, Point destPos)
+    public void execute(WorldModel world, ImageStore imageStore, EventScheduler scheduler)
     {
-        int horizontal = Integer.signum(destPos.x - this.position.x);
-        Point newPos = new Point(this.position.x + horizontal,
-                this.position.y);
-
-        Optional<Entity> occupant = world.getOccupant( newPos);
-
-        if (horizontal == 0 ||
-                (occupant.isPresent() && !(occupant.get().getClass() == Ore.class )))
-        {
-            int vert = Integer.signum(destPos.y - this.position.y);
-            newPos = new Point(this.position.x, this.position.y + vert);
-            occupant = world.getOccupant( newPos);
-
-            if ((vert == 0) ||
-                    (occupant.isPresent() && !(occupant.get().getClass() == Ore.class)))
-            {
-                newPos = this.position;
-            }
-        }
-
-        return newPos;
-    }
-
-
-
-
-
-
-    public  void execute( WorldModel world, ImageStore imageStore, EventScheduler scheduler)
-    {
-        Optional<Entity> blobTarget = world.findNearest( this.position, Vein.class);
-        long nextPeriod = this.actionPeriod;
+        Optional<Abstract_Entity> blobTarget = world.findNearest( this.getPosition(), Vein.class);
+        long nextPeriod = getActionPeriod();
 
         if (blobTarget.isPresent())
         {
@@ -136,35 +52,34 @@ public class Oreblob implements Moveable{
             {
                 Quake quake = Quake.createQuake(tgtPos,
 
-                        Functions.getImageList(imageStore, QUAKE_KEY));
+                        ImageStore.getImageList(imageStore, QUAKE_KEY));
 
                 world.addEntity( quake);
-                nextPeriod += this.actionPeriod;
+                nextPeriod += getActionPeriod();
                 quake.scheduleActions( scheduler, world, imageStore);
             }
         }
-
-        scheduler.scheduleEvent( this,
-                Activity.createActivityAction(this, world, imageStore),
-                nextPeriod);
+        scheduler.scheduleEvent( this, new Activity(this,
+                world, imageStore, 0), nextPeriod);
     }
 
+    private PathingStrategy strategy = new AStarPathingStrategy();
+    @Override
+    public Point nextPosition(WorldModel world, Point desPos){
+        List<Point> pts;
 
-    public int getAnimationPeriod() { return this.animationPeriod; }
+        pts = strategy.computePath(getPosition(), desPos, p -> world.withinBounds(p) && !world.isOccupied(p),
+                Point::adjacent, PathingStrategy.CARDINAL_NEIGHBORS);
+        if(pts.size() != 0)
+            return pts.get(0);
+        return getPosition();
+    }
 
-    //edited
-    public void nextImage() {
-        this.imageIndex = (this.getImageIndex() + 1) % this.getImages().size();}
-
-
-
-    public void scheduleActions (EventScheduler scheduler, WorldModel world, ImageStore imageStore)
+    void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore)
     {
-        scheduler.scheduleEvent(this,
-                Activity.createActivityAction(this, world, imageStore),
-                this.actionPeriod);
-        scheduler.scheduleEvent(this,
-                Animation.createAnimationAction(this, 0), this.getAnimationPeriod());
-    }
+        scheduler.scheduleEvent(this, new Activity(this, world, imageStore, 0),
+                this.getAnimationPeriod());
 
+        scheduler.scheduleEvent(this, new Animation(this, 0), this.getAnimationPeriod());
+    }
 }

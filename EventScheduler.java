@@ -1,10 +1,9 @@
 import java.util.*;
 
-// @SuppressWarnings("ALL")
 final class EventScheduler
 {
     private final PriorityQueue<Event> eventQueue;
-    private final Map<Entity, List<Event>> pendingEvents;
+    private final Map<Abstract_Entity, List<Event>> pendingEvents;
     private final double timeScale;
 
     public EventScheduler(double timeScale)
@@ -14,7 +13,7 @@ final class EventScheduler
         this.timeScale = timeScale;
     }
 
-    public void scheduleEvent( Entity entity, Action action, long afterPeriod)
+    public void scheduleEvent(Abstract_Entity entity, Action action, long afterPeriod)
     {
         long time = System.currentTimeMillis() +
                 (long)(afterPeriod * this.timeScale);
@@ -29,7 +28,8 @@ final class EventScheduler
         this.pendingEvents.put(entity, pending);
     }
 
-    public  void unscheduleAllEvents(Entity entity)
+
+    public void unscheduleAllEvents(Abstract_Entity entity)
     {
         List<Event> pending = this.pendingEvents.remove(entity);
 
@@ -42,7 +42,7 @@ final class EventScheduler
         }
     }
 
-    public  void removePendingEvent(Event event)
+    public void removePendingEvent(Event event)
     {
         List<Event> pending = this.pendingEvents.get(event.getEntity());
 
@@ -63,6 +63,14 @@ final class EventScheduler
 
             next.getAction().executeAction( this);
         }
+    }
+
+    public PriorityQueue<Event> getEventQueue(){
+        return eventQueue;
+    }
+
+    public void addToEventQueue(Event event){
+        eventQueue.add(event);
     }
 
 }

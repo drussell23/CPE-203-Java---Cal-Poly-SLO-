@@ -17,6 +17,8 @@ miner images/miner2.bmp 252 252 252 0
 miner images/miner3.bmp 252 252 252 0
 miner images/miner4.bmp 252 252 252 0
 miner images/miner5.bmp 252 252 252 0
+fireman images/fireman1.bmp 252 252 252 128
+fireman images/fireman2.bmp 252 252 252 128
 obstacle images/obstacle.bmp
 ore images/ore.bmp 201 26 26 0
 quake images/quake1.bmp 255 255 255 0
@@ -25,6 +27,7 @@ quake images/quake3.bmp 255 255 255 0
 quake images/quake4.bmp 255 255 255 0
 quake images/quake5.bmp 255 255 255 0
 quake images/quake6.bmp 255 255 255 0
+fire_1 images/fire_1.bmp
 rocks images/rock.bmp
 vein images/vein.bmp
 background_default images/none.bmp
