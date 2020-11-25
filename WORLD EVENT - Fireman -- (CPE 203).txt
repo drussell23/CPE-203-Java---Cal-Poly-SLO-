@@ -1,0 +1,11 @@
+1.) How to trigger the event?
+    * When you run the program and click the mouse button, it will spawn a Fireman and Fire. 
+
+2.) What should happen when the event is triggered? 
+    * A square of fire will appear around where the user clicked it. 
+
+3.) What the affected entities should do?
+    * When the affected entities are affected by the fire, they should stop and not move at all. 
+
+4.) What the new entity is and how it should behave? 
+    * The new entity is the Fireman. The Fireman will go towards the nearest blacksmith and put out the fire. 
